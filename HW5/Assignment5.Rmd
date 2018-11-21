@@ -1,0 +1,159 @@
+---
+title: "Assignment 5"
+author: "Kyle Ligon"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+library(tidyverse)
+library(broom)
+```
+
+
+
+# Problem A- Chi Square Test for Differences in Probabilities
+```{r, message=FALSE, warning=FALSE}
+men <- c(32, 68)
+women <- c(26, 74)
+
+taste <- data.frame(men, women, row.names = c('no likey', 'likey'))
+taste_test <- chisq.test(x = taste, correct = FALSE) %>%
+  tidy()
+```
+
+## Hypotheses:         
+
+$H_{0}$: $p_{men}$ = $p_{women}$     
+
+$H_{1}$: $p_{men}$ \neq $p_{women}$
+
+## Test Statistic    
+The test statistic of this Chi-Square test is `r round(taste_test$statistic)`
+
+## Critical Region    
+We are looking for a $\chi_{0.975, 1, 1}^2$ and $\chi_{0.025, 1, 1}^2$, which is equal to 8.7652.     
+
+## Conclusion    
+With the test statistic not greater than or less than the critical region, we cannot reject the Null hypothesis that the probabilities are the same.  There is not enough evidence to suggest that the two probabilities are different.  
+
+# Problem B- Fisher's Exact Test    
+
+```{r, message=FALSE, warning=FALSE}
+
+
+```
+
+## Hypotheses:         
+
+$H_{0}$: All _c_ populations have the same median.    
+
+$H_{1}$: At least two of the populations have different medians.    
+
+## Test Statistic    
+The test statistic of this Median test is 0.8269.  
+
+## Critical Region    
+We are looking for a $\chi_{0.95, 2}^2$, which is equal to 5.9941.     
+
+## Conclusion    
+With the test statistic greater than the critical region, we can reject the Null hypothesis that the medians are the same.  There is evidence to suggest that at least two medians are different.  
+
+# Problem C- Chi Square Test for Differences in Probabilities    
+
+```{r, message = FALSE, warning=FALSE}
+ase <- c(11, 11, 1)
+nyse <- c(24, 11, 0)
+
+stocks <- data.frame(ase, nyse, row.names = c('A', 'B', 'C')) %>%
+  t()
+
+stock_test <- chisq.test(x = stocks, correct = FALSE)
+```
+
+## Hypotheses:         
+
+$H_{0}$: $p_{ASE}$ = $p_{NYSE}$    
+
+$H_{1}$: At least two of the populations have different populations.    
+
+## Test Statistic    
+The test statistic of this Median test is 0.8269.  
+
+## Critical Region    
+We are looking for a $\chi_{0.95, 2}^2$, which is equal to 5.9941.     
+
+## Conclusion    
+With the test statistic greater than the critical region, we can reject the Null hypothesis that the medians are the same.  There is evidence to suggest that at least two medians are different.  
+
+
+# Problem D- Chi-Square Test    
+
+```{r, message = FALSE, warning=FALSE}
+
+
+```
+
+## Hypotheses:         
+
+$H_{0}$: All _c_ populations have the same median.    
+
+$H_{1}$: At least two of the populations have different medians.    
+
+## Test Statistic    
+The test statistic of this Median test is 0.8269.  
+
+## Critical Region    
+We are looking for a $\chi_{0.95, 2}^2$, which is equal to 5.9941.     
+
+## Conclusion    
+With the test statistic greater than the critical region, we can reject the Null hypothesis that the medians are the same.  There is evidence to suggest that at least two medians are different.  
+
+# Problem E- Median Test
+
+```{r, message = FALSE, warning=FALSE, results = 'hide'}
+#packages needed
+library(agricolae)
+
+sampl_1 <- c(35, 42, 42, 30, 15, 31, 29, 29, 17)
+sampl_2 <- c(34, 38, 26, 17, 42, 28, 35, 33, 16)
+sampl_3 <- c(17, 29, 30, 36, 41, 30, 31, 23, 38)
+
+sample_col <- c(rep('samp_1', length(sampl_1)), 
+                rep('samp_2', length(sampl_2)), 
+                rep('samp_3', length(sampl_3)))
+
+medians <- c(sampl_1, sampl_2, sampl_3)
+
+med_frame <- data.frame(sample_col = as.factor(sample_col), 
+                          medians = medians) %>%
+  as.tibble()
+
+med_test <- Median.test(trt = med_frame$sample_col, 
+                        y = med_frame$medians)
+```
+
+## Hypotheses:         
+
+$H_{0}$: All _c_ populations have the same median.    
+
+$H_{1}$: At least two of the populations have different medians.    
+
+## Test Statistic    
+The test statistic of this Median test is 0.8269.  
+
+## Critical Region    
+We are looking for a $\chi_{0.95, 2}^2$, which is equal to 5.9941.     
+
+## Conclusion    
+With the test statistic greater than the critical region, we can reject the Null hypothesis that the medians are the same.  There is evidence to suggest that at least two medians are different.  

@@ -1,0 +1,138 @@
+---
+title: "Assignment 4"
+author: "Kyle Ligon"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+#invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Required Packages
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(broom)
+library(nortest)
+```
+
+
+# Dataset #1: Using KS on a dataset to check Exponential Distribution with Rate == 1
+```{r, warning=FALSE, message=FALSE}
+air <- as.tibble(datasets::airquality)
+air <- filter(air, !is.na(air$Ozone))
+
+air
+```
+## Hypotheses    
+$H_{0}$: $F(x) = F^{*}(x)$    
+$H_{1}$: $F(x) \ne F^{*}(x)$     
+
+## Test Statistic    
+```{r, warning=FALSE, message=FALSE}
+ks_test <- ks.test(x = air$Ozone, 'pexp', rate = 1) %>%
+  tidy()
+```
+
+We have `r round(ks_test$statistic, 4)` as our test statistic.    
+
+## P-value    
+
+We have `r round(ks_test$p.value, 4)` as our p-value.    
+
+## Conclusion   
+With a p-value less than 0.05, we have enough evidence to reject the null hypothesis that our data fit the exponential distribution with a Rate == 1.  There appears to be evidence that our data do not fit an exponential model with Rate == 1.  
+
+# Dataset #2: Using the Chi-Square test to see if my data is Binomially Distributed
+```{r, warning=FALSE, message=FALSE}
+faithful <- as.tibble(datasets::faithful)
+
+faithful
+```
+
+## Hypotheses   
+$H_{0}: P(X$ is in class $j) = p_{j}*$    
+$H_{1}: P(X$ is in class $j) \neq$ for at least one class
+
+## Test Statistic
+```{r, message=FALSE, warning=FALSE}
+
+baseball <- c(18, 17, 16, 15, 14, 14, 13, 12, 11, 11, 10, 10, 10, 10, 10, 9, 8, 7)
+hist <- hist(baseball)
+
+breaks <- hist$breaks
+counts <- hist$counts
+
+binom_calculator <- function(left_val, right_val, n, p){
+  if(right_val != 1){
+    pbinom(right_val, p = p, size =  n) - pbinom(left_val, p = p, size = n)
+  } else {
+    1 - pbinom(left_val, p = p, size = n)
+  }
+}
+
+p2 <- binom_calculator(6, 8.0, n = 45, p = 0.25)
+p3 <- binom_calculator(8, 10, n = 45, p = 0.25)
+p4 <- binom_calculator(10, 12, n = 45, p = 0.25)
+p5 <- binom_calculator(12, 14, n = 45, p = 0.25)
+p6 <- binom_calculator(14, 16, n = 45, p = 0.25)
+p7 <- binom_calculator(16, 1, n = 45, p = 0.25)
+
+
+
+
+prob_vec <- c(p2, p3, p4, p5, p6, p7)
+
+baseball_test <- chisq.test(x = counts, prob_vec) %>% 
+  tidy()
+```
+
+Our test statistic is `r round(baseball_test$statistic, 4)`.  
+
+## P-value 
+```{r, message=FALSE, warning=FALSE}
+pvalue <- 1 - pchisq(baseball_test$statistic, df = length(prob_vec) - 3) 
+```
+
+Degrees of Freedom Calculation = N - x - 1 = 6 - 2 - 1 = 3, where N is the number of classes and x is the number of parameters in the binomial distribution.    
+
+The p-value is $1.63176 x 10^{-5}$     
+
+## Conclusion
+With a p-value less than 0.05, we can reject the null hypothesis that this sample belongs to a binomially distributed Random Variable with $p = 0.25$ and $n =$ 45.  There does not seem to be evidence pointing to the fact that this is a binomially distributed sample.    
+
+#Dataset #3: Running the Shapiro-Wilk test to see if the beaver1's ```temp``` variable is normally distributed.    
+```{r, warning=FALSE, message=FALSE}
+beaver <- as.tibble(datasets::beaver1)
+
+beaver
+```
+
+$H_{0}$:  The random sample comes from a population with the normal distribution, with unknown mean and standard deviation.     
+$H_{1}$:    The distribution function the $X_{i}$'s is nonnormal.    
+
+##Test Statistic     
+```{r, warning=FALSE, message=FALSE}
+normal_test <- shapiro.test(x = beaver$temp) %>%
+  tidy()
+```
+
+Our test statistic is `r round(normal_test$statistic, 3)`.  
+
+##P-Value    
+Our p-value is `r round(normal_test$p.value, 3)`.    
+
+##Conclusion    
+With a p-value less than 0.05, we have enough evidence to reject the null hypothesis that the random sample comes from a population with unknown mean and standard deviation.  There seems to be evidence to support that the distribution function is nonnormal.  
+

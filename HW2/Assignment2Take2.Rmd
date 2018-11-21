@@ -1,0 +1,140 @@
+---
+title: "Assignment 2"
+author: "Kyle Ligon"
+date: "September 30, 2018"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+A) 
+  1. Explain how do the bootstrap methods work?  
+    Bootstrap methods take multiple runs with replacement of a sample.  With the created distribution, you can map out confidence intervals of the statistic in question. 
+    2. and 3.
+```{r, warning = FALSE, message = FALSE}
+# Package(s) needed 
+library(boot)
+library(tidyverse)
+library(knitr)
+ttSample <- c(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+
+# Create a function f in R to compute the observed statistic
+f <- function(DATA, i){
+  return(mean(DATA[i]))
+}
+
+# bootstrapping with R replications 
+results <- boot(ttSample, f , R = 250)
+
+# get confidence interval 
+boot.ci(results, conf = 0.90, type="all")
+boot.ci(results, conf = 0.95, type="all")
+boot.ci(results, conf = 0.99, type="all")
+r <- as.data.frame(bootMeans <- results$t)
+#plotting the histogram
+ggplot(r, aes(x = bootMeans)) + 
+  geom_histogram(binwidth = 0.05, bins = round(sqrt(nrow(r)), 0)) +
+  ggtitle(label = paste0(results$R, " bootstrapped samples of the Texas Tech Grad Class"))
+
+results <- boot(ttSample, f , R = 1000)
+boot.ci(results, conf = 0.90, type="all")
+boot.ci(results, conf = 0.95, type="all")
+boot.ci(results, conf = 0.99, type="all")
+r <- as.data.frame(bootMeans <- results$t)
+ggplot(r, aes(x = bootMeans)) + 
+  geom_histogram(binwidth = 0.05) +
+  ggtitle(label = paste0(results$R, " bootstrapped samples of the Texas Tech Grad Class"))
+
+results <- boot(ttSample, f , R = 5000)
+boot.ci(results, conf = 0.90, type="all")
+boot.ci(results, conf = 0.95, type="all")
+boot.ci(results, conf = 0.99, type="all")
+r <- as.data.frame(bootMeans <- results$t)
+ggplot(r, aes(x = bootMeans)) + 
+  geom_histogram(binwidth = 0.05) +
+  ggtitle(label = paste0(results$R, " bootstrapped samples of the Texas Tech Grad Class"))
+
+results <- boot(ttSample, f , R = 10000)
+boot.ci(results, conf = 0.90, type="all")
+boot.ci(results, conf = 0.95, type="all")
+boot.ci(results, conf = 0.99, type="all")
+r <- as.data.frame(bootMeans <- results$t)
+ggplot(r, aes(x = bootMeans)) + 
+  geom_histogram(binwidth = 0.05) +
+  ggtitle(label = paste0(results$R, " bootstrapped samples of the Texas Tech Grad Class"))
+```
+
+4. Discuss and comment on the results.    
+     As our sample size increases, we see the distributions center more closely around p_hat = 0.90.  Additionally, the standard errors tighten up as the sample size increases.  finally, the confidence intervals shrink accordingly as the bootstrap samples increase.
+     
+B)    
+    1. Generate n in {5, 10, 30} samples from the standard normal distribution.  Then, calculate the confidence intervals from each.
+```{r, warning = FALSE, message = FALSE}
+# 5 samples from standard normal distribution
+set.seed(1)
+n_5 <- rnorm(5)
+
+confidence_int <- function(vector){
+  #high value of the confidence interval
+  high_val <- round(mean(vector) + qnorm(0.975) * sd(vector) / sqrt(length(vector)), 4)
+  #low value of the confidence interval
+  low_val <- round(mean(vector) + qnorm(0.025) * sd(vector) / sqrt(length(vector)), 4)
+  #ouput statement
+  cat(paste0("The two tail 95% confidence interval, of sample size ", length(vector), 
+      ", \nis between the values of ", low_val, " and ", high_val))
+}
+# calling the function
+confidence_int(n_5)
+
+```
+
+```{r, warning = FALSE, message = FALSE}
+set.seed(1)
+n_10 <- rnorm(10)
+
+confidence_int(n_10)
+```
+
+```{r, warning = FALSE, message = FALSE}
+set.seed(1)
+n_30 <- rnorm(30)
+
+confidence_int(n_30)
+```
+
+2) Calculate the confidence intervals for the bootstrap samples where n in 1000, 5000, 10000, 100000.
+    I'm going to use a sample of 10 random normal variables whose mean and standard deviation approaches 0 and 1 as n approaches infinity respectively.
+```{r, warning = FALSE, message = FALSE}
+set.seed(1)
+normVec <- rnorm(10)
+
+results <- boot(normVec, f , R = 1000)
+boot.ci(results)
+```
+
+```{r, warning = FALSE, message = FALSE}
+results <- boot(normVec, f, R = 5000)
+boot.ci(results)
+```
+
+```{r, warning = FALSE, message = FALSE}
+results <- boot(normVec, f, R = 10000)
+boot.ci(results)
+```
+
+```{r, warning = FALSE, message = FALSE}
+results <- boot(normVec, f, R = 100000)
+boot.ci(results)
+```
+
+3) Determe the smallest sample size n in N* that would provide the best approximation compared to the theory.      
+     According to Efron and Tibshirane(1986), a minimum threshold of 250 bootstrap samples is necessary to be accurate.  With that in mind, they also say 1000 is a safe bet to land on an approximate estimation.  With this previous work done(looking at the difference between the Normal Group and the Basic Group), I would look back to problem 2 and do 1000 bootstrap samples as my barebone minimum value for the number of replications as it provides a decent cut point for while balancing distance from the normal bootstrap method.  
+
+4) Discuss and comment on the results.    
+     As can be seen above, our biggest gains come from 1000 bootstrap samples up to 5000 and then we hit dimishing returns for 4 decimal places.  As an investigation, I'd like to see the barest minimum 250 bootstrap samples as recommended by Efron and Tibshirane(1986).  
+```{r, warning = FALSE, message = FALSE}
+results <- boot(normVec, f, R = 250)
+boot.ci(results, type = "norm")
+```
+    
+Surprisingly, the bootstrap group of 250 does come close to approximating the confidence interval.  That being said, as long as compute stays cheap.  I would rather push for more bootstraps in my confidences intervals.  So 1000, would be amount that I lean on going forward.  

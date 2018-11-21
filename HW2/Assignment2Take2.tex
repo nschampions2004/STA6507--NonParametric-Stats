@@ -1,0 +1,741 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Assignment 2 Take 2},
+            pdfauthor={Kyle Ligon},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Assignment 2 Take 2}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Kyle Ligon}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{September 24, 2018}
+
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\item
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Explain how do the bootstrap methods work?\\
+  Bootstrap methods take multiple runs with replacement of a sample.
+  With the created distribution, you can map out confidence intervals of
+  the statistic in question.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \setcounter{enumii}{1}
+  \tightlist
+  \item
+    and 3.
+  \end{enumerate}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Package(s) needed }
+\KeywordTok{library}\NormalTok{(boot)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(knitr)}
+\NormalTok{ttSample <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+
+\CommentTok{# Create a function f in R to compute the observed statistic}
+\NormalTok{f <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(DATA, i)\{}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{mean}\NormalTok{(DATA[i]))}
+\NormalTok{\}}
+
+\CommentTok{# bootstrapping with R replications }
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(ttSample, f , }\DataTypeTok{R =} \DecValTok{250}\NormalTok{)}
+
+\CommentTok{# get confidence interval }
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.90}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 250 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.9, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 90%   ( 0.7824,  1.0008 )   ( 0.8000,  1.0000 )  
+## 
+## Level     Percentile            BCa          
+## 90%   ( 0.80,  1.00 )   ( 0.70,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.95}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 250 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.95, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   ( 0.7615,  1.0217 )   ( 0.8000,  1.0500 )  
+## 
+## Level     Percentile            BCa          
+## 95%   ( 0.75,  1.00 )   ( 0.70,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Some basic intervals may be unstable
+## Some percentile intervals may be unstable
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.99}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 250 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.99, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 99%   ( 0.7206,  1.0626 )   ( 0.8000,  1.0840 )  
+## 
+## Level     Percentile            BCa          
+## 99%   ( 0.7160,  1.0000 )   ( 0.7000,  0.9549 )  
+## Calculations and Intervals on Original Scale
+## Some basic intervals may be unstable
+## Some percentile intervals may be unstable
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(bootMeans <-}\StringTok{ }\NormalTok{results}\OperatorTok{$}\NormalTok{t)}
+\CommentTok{#plotting the histogram}
+\KeywordTok{ggplot}\NormalTok{(r, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bootMeans)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \FloatTok{0.05}\NormalTok{, }\DataTypeTok{bins =} \KeywordTok{round}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(r)), }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(results}\OperatorTok{$}\NormalTok{R, }\StringTok{" bootstrapped samples of the Texas Tech Grad Class"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment2Take2_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(ttSample, f , }\DataTypeTok{R =} \DecValTok{1000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.90}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.9, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 90%   ( 0.7860,  1.0085 )   ( 0.8000,  1.0000 )  
+## 
+## Level     Percentile            BCa          
+## 90%   ( 0.80,  1.00 )   ( 0.65,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.95}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.95, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   ( 0.7647,  1.0298 )   ( 0.8000,  1.0500 )  
+## 
+## Level     Percentile            BCa          
+## 95%   ( 0.75,  1.00 )   ( 0.65,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.99}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.99, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 99%   ( 0.7230,  1.0715 )   ( 0.8000,  1.1000 )  
+## 
+## Level     Percentile            BCa          
+## 99%   ( 0.70,  1.00 )   ( 0.65,  1.00 )  
+## Calculations and Intervals on Original Scale
+## Some basic intervals may be unstable
+## Some percentile intervals may be unstable
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(bootMeans <-}\StringTok{ }\NormalTok{results}\OperatorTok{$}\NormalTok{t)}
+\KeywordTok{ggplot}\NormalTok{(r, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bootMeans)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \FloatTok{0.05}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(results}\OperatorTok{$}\NormalTok{R, }\StringTok{" bootstrapped samples of the Texas Tech Grad Class"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment2Take2_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(ttSample, f , }\DataTypeTok{R =} \DecValTok{5000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.90}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 5000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.9, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 90%   ( 0.7885,  1.0107 )   ( 0.8000,  1.0000 )  
+## 
+## Level     Percentile            BCa          
+## 90%   ( 0.80,  1.00 )   ( 0.65,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.95}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 5000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.95, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   ( 0.7672,  1.0320 )   ( 0.8000,  1.0500 )  
+## 
+## Level     Percentile            BCa          
+## 95%   ( 0.75,  1.00 )   ( 0.60,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.99}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 5000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.99, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 99%   ( 0.7256,  1.0736 )   ( 0.8000,  1.1000 )  
+## 
+## Level     Percentile            BCa          
+## 99%   ( 0.7,  1.0 )   ( 0.6,  1.0 )  
+## Calculations and Intervals on Original Scale
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(bootMeans <-}\StringTok{ }\NormalTok{results}\OperatorTok{$}\NormalTok{t)}
+\KeywordTok{ggplot}\NormalTok{(r, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bootMeans)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \FloatTok{0.05}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(results}\OperatorTok{$}\NormalTok{R, }\StringTok{" bootstrapped samples of the Texas Tech Grad Class"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment2Take2_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(ttSample, f , }\DataTypeTok{R =} \DecValTok{10000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.90}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 10000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.9, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 90%   ( 0.7909,  1.0106 )   ( 0.8000,  1.0000 )  
+## 
+## Level     Percentile            BCa          
+## 90%   ( 0.80,  1.00 )   ( 0.65,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.95}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 10000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.95, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   ( 0.7699,  1.0317 )   ( 0.8000,  1.0500 )  
+## 
+## Level     Percentile            BCa          
+## 95%   ( 0.75,  1.00 )   ( 0.60,  0.95 )  
+## Calculations and Intervals on Original Scale
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{conf =} \FloatTok{0.99}\NormalTok{, }\DataTypeTok{type=}\StringTok{"all"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 10000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, conf = 0.99, type = "all")
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 99%   ( 0.7287,  1.0728 )   ( 0.8000,  1.1000 )  
+## 
+## Level     Percentile            BCa          
+## 99%   ( 0.7,  1.0 )   ( 0.6,  1.0 )  
+## Calculations and Intervals on Original Scale
+## Warning : BCa Intervals used Extreme Quantiles
+## Some BCa intervals may be unstable
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(bootMeans <-}\StringTok{ }\NormalTok{results}\OperatorTok{$}\NormalTok{t)}
+\KeywordTok{ggplot}\NormalTok{(r, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bootMeans)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \FloatTok{0.05}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(results}\OperatorTok{$}\NormalTok{R, }\StringTok{" bootstrapped samples of the Texas Tech Grad Class"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment2Take2_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Discuss and comment on the results.\\
+  As our sample size increases, we see the distributions center more
+  closely around p\_hat = 0.90. Additionally, the standard errors
+  tighten up as the sample size increases. finally, the confidence
+  intervals shrink accordingly as the bootstrap samples increase.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Generate n in \{5, 10, 30\} samples from the standard normal
+    distribution. Then, calculate the confidence intervals from each.
+  \end{enumerate}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 5 samples from standard normal distribution}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{n_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+
+\NormalTok{confidence_int <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(vector)\{}
+  \CommentTok{#high value of the confidence interval}
+\NormalTok{  high_val <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{mean}\NormalTok{(vector) }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sd}\NormalTok{(vector) }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{length}\NormalTok{(vector)), }\DecValTok{4}\NormalTok{)}
+  \CommentTok{#low value of the confidence interval}
+\NormalTok{  low_val <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{mean}\NormalTok{(vector) }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.025}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sd}\NormalTok{(vector) }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{length}\NormalTok{(vector)), }\DecValTok{4}\NormalTok{)}
+  \CommentTok{#ouput statement}
+  \KeywordTok{cat}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\StringTok{"The two tail 95% confidence interval, of sample size "}\NormalTok{, }\KeywordTok{length}\NormalTok{(vector), }
+      \StringTok{", }\CharTok{\textbackslash{}n}\StringTok{is between the values of "}\NormalTok{, low_val, }\StringTok{" and "}\NormalTok{, high_val))}
+\NormalTok{\}}
+\CommentTok{# calling the function}
+\KeywordTok{confidence_int}\NormalTok{(n_}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The two tail 95% confidence interval, of sample size 5, 
+## is between the values of -0.7131 and 0.9716
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{n_}\DecValTok{10}\NormalTok{ <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+
+\KeywordTok{confidence_int}\NormalTok{(n_}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The two tail 95% confidence interval, of sample size 10, 
+## is between the values of -0.3516 and 0.616
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{n_}\DecValTok{30}\NormalTok{ <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+
+\KeywordTok{confidence_int}\NormalTok{(n_}\DecValTok{30}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The two tail 95% confidence interval, of sample size 30, 
+## is between the values of -0.2482 and 0.4131
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Calculate the confidence intervals for the bootstrap samples where n
+  in 1000, 5000, 10000, 100000. I'm going to use a sample of 10 random
+  normal variables whose mean and standard deviation approaches 0 and 1
+  as n approaches infinity respectively.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{normVec <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(normVec, f , }\DataTypeTok{R =} \DecValTok{1000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results)
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   (-0.3180,  0.5941 )   (-0.3419,  0.5719 )  
+## 
+## Level     Percentile            BCa          
+## 95%   (-0.3075,  0.6063 )   (-0.2630,  0.6567 )  
+## Calculations and Intervals on Original Scale
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(normVec, f, }\DataTypeTok{R =} \DecValTok{5000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 5000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results)
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   (-0.3247,  0.5932 )   (-0.3339,  0.5860 )  
+## 
+## Level     Percentile            BCa          
+## 95%   (-0.3216,  0.5983 )   (-0.2900,  0.6259 )  
+## Calculations and Intervals on Original Scale
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(normVec, f, }\DataTypeTok{R =} \DecValTok{10000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 10000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results)
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   (-0.3277,  0.5915 )   (-0.3376,  0.5825 )  
+## 
+## Level     Percentile            BCa          
+## 95%   (-0.3181,  0.6020 )   (-0.3020,  0.6251 )  
+## Calculations and Intervals on Original Scale
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(normVec, f, }\DataTypeTok{R =} \DecValTok{100000}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 100000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results)
+## 
+## Intervals : 
+## Level      Normal              Basic         
+## 95%   (-0.3249,  0.5903 )   (-0.3328,  0.5767 )  
+## 
+## Level     Percentile            BCa          
+## 95%   (-0.3123,  0.5972 )   (-0.2924,  0.6221 )  
+## Calculations and Intervals on Original Scale
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\setcounter{enumi}{2}
+\item
+  Determing the smallest sample size n in N* that would provide the best
+  approximation compared to the theory. According to Efron and
+  Tibshirane(1986), a minimum threshold of 250 bootstrap samples is
+  necessary to be accurate. With that in mind, they also say 1000 is a
+  safe bet to land on an approximate estimation. With this previous work
+  done(looking at the difference between the Normal Group and the Basic
+  Group), I would look back to problem 2 and do 1000 bootstrap samples
+  as my barebone minimum value for the number of replications as it
+  provides a decent cut point for while balancing distance from the
+  normal bootstrap method.
+\item
+  Discuss and comment on the results.\\
+  As can be seen above, our biggest gains come from 1000 bootstrap
+  samples up to 5000 and then we hit dimishing returns for 4 decimal
+  places. As an investigation, I'd like to see the barest minimum 250
+  bootstrap samples as recommended by Efron and Tibshirane(1986).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results <-}\StringTok{ }\KeywordTok{boot}\NormalTok{(normVec, f, }\DataTypeTok{R =} \DecValTok{250}\NormalTok{)}
+\KeywordTok{boot.ci}\NormalTok{(results, }\DataTypeTok{type =} \StringTok{"norm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 250 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = results, type = "norm")
+## 
+## Intervals : 
+## Level      Normal        
+## 95%   (-0.3340,  0.5657 )  
+## Calculations and Intervals on Original Scale
+\end{verbatim}
+
+Surprisingly, the bootstrap group of 250 does come close to
+approximating the confidence interval. That being said, as long as
+compute stays cheap. I would rather push for more bootstraps in my
+confidences intervals. So 1000, would be amount that I lean on going
+forward.
+
+
+\end{document}

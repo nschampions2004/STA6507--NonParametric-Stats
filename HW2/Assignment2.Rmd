@@ -1,0 +1,73 @@
+---
+title: "Assignment 2"
+author: "Kyle Ligon"
+date: "September 24, 2018"
+output: pdf_document
+---
+
+A) 
+  1. Explain how do the bootstrap methods work?  
+    Bootstrap methods take multiple samples with replacement of an already occurring sample.  With the created distribution, you can map out confidence intervals of the statistic in question.  
+```{r, message = FALSE, warning = FALSE}
+#library calls
+library(tidyverse)
+library(rsample)
+
+#The Texas Tech Sample where 0 indicates someone who didn't graduate and 1 is someone who did.
+
+#reprex
+# ex <- data.frame(vals = seq(1, 3, by = 1)) %>%
+#   mutate(samples = map(ttSample, list), 
+#          boots = map(.x = .$vals, bootstrapper)) %>%
+#   mutate(p_hat =map_dbl(.x = boots, .f = meanTaker))
+# 
+# holder <- vector()
+# for(i in 1:length(ex$examp.splits))
+# {
+#     holder[[i]] = mean(as.data.frame(ex$examp.splits)[[i]])
+#     print(holder)
+# }
+# mean(holder)
+
+library(tidyverse)
+library(rsample)
+ttSample <- data.frame(grad =  c(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1))
+
+bootstrapper <- function(n) {bootstraps(data = ttSample, times = n)}
+meanTaker <- function(columnVal) 
+{
+  #for(i in 1:length(columnVal))
+  #{
+    meanHolder <- vector(length = length(columnVal[[1]][[1]]))
+    for(j in 1:length(columnVal[[1]][[1]]))
+    {
+      meanHolder[j] <- mean(as.data.frame(columnVal[[1]][[1]])[, j])
+      print(meanHolder[j])
+    }
+    mean(meanHolder)
+  #}
+  
+}
+
+meanTaker <- function(boot) {
+  grads <- sapply(boot$splits, function (split) split$data$grad)
+  sum(grads)
+}
+
+trialFrame <- data.frame(n = 250) %>%
+  mutate(samples = map(ttSample, list),
+         boots = map(.x = .$n, .f = bootstrapper)) 
+trialFrame$p_hat = map_dbl(.x = trialFrame$boots, .f = meanTaker)
+
+bootFrame <-  data.frame(n = rep(c(250, 1000, 5000, 10000), 3), confLev = rep(c(0.9, 0.95, 0.99))) %>%
+  arrange(n, confLev) %>%
+  mutate(alpha = 1 - confLev,
+    upperCI = confLev + (alpha / 2),
+    lowerCI = confLev - (alpha / 2),
+    samples = map(ttSample, list),
+    boots = map(.x = .$n, .f = bootstrapper))
+
+bootFrame$p_hat <- map_dbl(.x = bootFrame$boots, .f = meanTaker)
+
+
+```
