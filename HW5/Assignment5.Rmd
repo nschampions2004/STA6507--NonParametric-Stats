@@ -18,6 +18,7 @@ link-citations: yes
 library(tufte)
 library(tidyverse)
 library(broom)
+library(anytime)
 ```
 
 
@@ -36,7 +37,7 @@ taste_test <- chisq.test(x = taste, correct = FALSE) %>%
 
 $H_{0}$: $p_{men}$ = $p_{women}$     
 
-$H_{1}$: $p_{men}$ \neq $p_{women}$
+$H_{1}$: $p_{men}$ $\neq$ $p_{women}$
 
 ## Test Statistic    
 The test statistic of this Chi-Square test is `r round(taste_test$statistic)`
