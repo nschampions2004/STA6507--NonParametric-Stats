@@ -44,7 +44,7 @@ $H_{1}$: $p_{men}$ $\neq$ $p_{women}$
 The test statistic of this Chi-Square test is `r round(taste_test$statistic)`
 
 ## Critical Region    
-We are looking for a $\chi_{0.975, 1}^2$ and $\chi_{0.025, 1}^2$, which is equal to `r qchisq(0.975, 1)` and `r round(qchisq(0.025, 1), 4)`.     
+We are looking for a $\chi_{0.975, 1}^2$ and $\chi_{0.025, 1}^2$, which are equal to `r qchisq(0.975, 1)` and `r round(qchisq(0.025, 1), 4)`.     
 
 ## Conclusion    
 With the test statistic not greater than or less than the critical region, we cannot reject the Null hypothesis that the probabilities are the same.  There is not enough evidence to suggest that the two probabilities are different.  
@@ -54,8 +54,8 @@ With the test statistic not greater than or less than the critical region, we ca
 ## Suppose that 16 observations pairs of X = age of marriage of a husband, and Y=age of marriage of his father, resulted on 7 pairs where both ages were above the median. Are the two variables positively correlated?
 
 ```{r, message=FALSE, warning=FALSE}
-sons_age <- c(22, 23, 25, 22, 24, 23, 23, 24, 31, 32, 33, 34, 35, 36, 37, 22)
-fathers_age <- c(23, 24, 24, 25, 25, 24, 24, 23, 31, 32, 33, 34, 35, 36, 37, 19)
+sons_age <- c(19, 18, 18, 20, 21, 34,17, 30, 31, 32, 33, 34, 35, 36, 37, 22)
+fathers_age <- c(23, 24, 24, 25, 27, 24, 24, 23, 31, 32, 33, 34, 35, 36, 37, 19)
 
 # make the data frame
 age <- data.frame(sons_age = sons_age, fathers_age = fathers_age)
@@ -69,6 +69,58 @@ ggplot(data = age, aes(x = sons_age, y = fathers_age)) +
   theme_minimal()
 ```
 
+```{r, message=FALSE, warning=FALSE}
+counter <- function(vector1, vector2){
+### 
+#     Arguments:    
+#       vector1- {Vector of sons_ages}
+#       vector2- {Vector of fathers_ages}
+### 
+  q1_cnt = 0
+  q2_cnt = 0
+  q3_cnt = 0
+  q4_cnt = 0
+  for (i in 1:length(vector1)) {
+    if((vector1[i] >= median(vector1)) & (vector2[i] > median(vector2))){
+      q1_cnt = q1_cnt + 1
+    }
+    else if((vector1[i] <= median(vector1)) & (vector2[i] > median(vector2))){
+      q2_cnt = q2_cnt + 1
+    }
+    else if((vector1[i] <= median(vector1)) & (vector2[i] <= median(vector2))){
+      q3_cnt = q3_cnt + 1
+    }
+    else
+      q4_cnt = q4_cnt + 1
+  }
+  cnt_table = c(q2_cnt, q1_cnt, q3_cnt, q4_cnt)
+  cnt_table <- as.table(matrix(cnt_table, nrow = 2))
+  
+  fisher.test(cnt_table, alternative = 'less') %>%
+   tidy()
+}
+
+test <- counter(sons_age, fathers_age)
+```
+
+To accomplish this, we will run a Lower Tailed Fisher Exact Test.  The reason for lower tailed is due to the fact the $p_{1}$ would be lower than or equal to $p_{2}$ if they were positively correlated.  
+
+## Hypotheses:      
+
+$H_{0}: p_{1} \geq p_{2}$    
+$H_{1}: p_{1} < p_{2}$    
+
+## Test Statistic:      
+
+The test statistic is `r test$estimate`.  
+
+## P-Value:     
+
+The p-value is `r test$p.value`.
+
+## Conclusion:    
+
+With a p-value less than 0.05, there is enough evidence to suggest that we reject the null hypothesis that $p_{1}$ is less than or equal to $p_{2}$.  There does seem evidence to support the claim that $p_{2}$ is of higher likelihood.^[Where $p_{2}$ is the likelihood that an Observation from Column 1 lies in Row 2]
 
 
 
@@ -81,7 +133,7 @@ nyse <- c(24, 11, 0)
 stocks <- data.frame(ase, nyse, row.names = c('A', 'B', 'C')) %>%
   t()
 
-stock_test <- chisq.test(x = stocks, correct = FALSE) %>%
+stock_test <- chisq.test(x = stocks) %>%
   tidy()
 ```
 
@@ -167,7 +219,7 @@ med_test <- Median.test(trt = med_frame$sample_col,
 
 ## Hypotheses:         
 
-$H_{0}$: All _c_ populations have the same median.    
+$H_{0}$: All _3_ populations have the same median.    
 
 $H_{1}$: At least two of the populations have different medians.    
 
