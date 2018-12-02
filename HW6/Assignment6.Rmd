@@ -25,6 +25,7 @@ options(htmltools.dir.version = FALSE)
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(broom)
+library(coin)
 ```
 
 
@@ -70,34 +71,97 @@ A blood bank kept a record of the rate of heartbeats for several blood donors.
 
 1. Is the average of the rate of heartbeats the same for men and women?
 
-
-
-2. Is the variation among the men significantly greater than the variation among the women?
-
 ```{r, message=FALSE, warning=FALSE}
 men <- c(58, 65, 74, 74, 76, 79, 82, 86)
 women <- c(66, 68, 67, 69, 72, 73, 74, 75, 76)
 
-
+gender_test <- wilcox.test(men, women, alternative = 'two.sided') %>%
+  tidy()
 ```
 
 ## Hypotheses:      
 
-$H_{0}$: All of the 3 population distributions are identical.    
-$H_{1}$: At least one of the population tends to yield larger observations than at least one of the other populations.    
+$H_{0}$: $F(x) = G(x)$
+$H_{1}$: $F(X) \neq G(x)$    
 
 ## Test Statistic:      
 
-The test statistic is `r round(k_test$statistic, 4)`.  
+The test statistic is `r round(gender_test$statistic, 4)`.  
 
 ## P-Value:     
 
-The p-value is `r round(k_test$p.value, 4)`.
+The p-value is `r round(gender_test$p.value, 4)`.
 
 ## Conclusion:    
 
-With a p-value less than 0.05, there is enough evidence to suggest that we reject the null hypothesis that the populations distributions are identical.  There does seem evidence to support the claim that at least on of the populations produces larger values than at least on of the other distirbutione.
+With a p-value greater than 0.05, there is not enough evidence to suggest that we reject the null hypothesis that $F(x) = G(x)$.  There doesn't seem evidence to support the claim that $F(X) \neq G(x)$.
 
+2. Is the variation among the men significantly greater than the variation among the women?
+
+```{r,message=FALSE, warning=FALSE}
+gender_frame <- data.frame(label = c(rep('m', length(men)), rep('w', length(women))),
+            values= c(men, women))
+gender_var_test <- conover_test(formula = values ~ label, 
+                                data = gender_frame,
+                                alternative = 'greater')
+gender_var_test
+```
+
+
+## Hypotheses:    
+
+$H_{0}$: $V(m) \leq V(w)$    
+$H_{1}$: $V(m) > V(w)$    
+
+## Test Statistic:    
+
+The test statistics is a z-value of 1.3906.  
+
+## P-value:    
+
+The p-value of the test is 0.08218.  
+
+## Conclusion:     
+
+With a p-value greater than 0.05, there is not enough evidence to reject the null hypothesis that the Variances of men are less than or equal to the Variances of women.  There does not appear to be evidence to suggest that the Variances of men are greater than the Variances of women.  
+
+# Problem C
+
+7 married couples were selected at random, and each husband and each wife was asked how much money they spent on their spouses Christmas present year. The responses were as follows:    
+
+Does the husband tend to spend more than the wife?
+
+```{r, message=FALSE, warning=FALSE}
+husband <- c(25, 21, 38, 64, 52, 16, 26)
+wife <- c(16, 42, 56, 41, 19, 26, 24)
+
+frame <- data.frame(husband, wife) %>%
+  as.tibble() %>%
+  mutate(differences = husband - wife)
+
+spouse_test <- wilcox.test(x = frame$husband, 
+                           y = frame$wife, 
+                           paired = TRUE,
+                           alternative = 'greater') %>%
+  tidy()
+```
+
+## Hypotheses:    
+
+$H_{0}$: $Med_{Men} \leq Med_{Women}$    
+$H_{1}$: $Med_{Men} > Med_{Women}$    
+
+## Test Statistic:    
+
+The test statistics is a T = 16.  
+
+## P-value:    
+
+The p-value of the test is 0.406.  
+
+## Conclusion:     
+
+With a p-value greater than 0.05, there is not enough evidence to reject the null hypothesis that the Median values of men are less than or greater than the Medain values of women.  There does not appear to be evidence to suggest that the Median of the male distribution is larger than the Median of the women's distribution.  
 
 
 

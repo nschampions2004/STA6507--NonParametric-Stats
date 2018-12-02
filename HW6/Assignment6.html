@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kyle Ligon" />
 
-<meta name="date" content="2018-12-01" />
+<meta name="date" content="2018-12-02" />
 
 <title>Assignment 6</title>
 
@@ -48,12 +48,13 @@ if (window.hljs) {
 <h1 class="title toc-ignore">Assignment 6</h1>
 <h3 class="subtitle"><em>Nonparametric Rank Tests</em></h3>
 <h4 class="author"><em>Kyle Ligon</em></h4>
-<h4 class="date"><em>2018-12-01</em></h4>
+<h4 class="date"><em>2018-12-02</em></h4>
 
 
 
 <pre class="r"><code>library(tidyverse)
-library(broom)</code></pre>
+library(broom)
+library(coin)</code></pre>
 <div id="problem-a" class="section level1">
 <h1>Problem A</h1>
 <p>Random samples from each of three different types of light bulbs were tested to see how long the light bulbs lasted, with the following results:</p>
@@ -83,6 +84,100 @@ k_test &lt;- kruskal.test(x = df$vals, g = df$titles) %&gt;%
 <div id="conclusion" class="section level2">
 <h2>Conclusion:</h2>
 <p>With a p-value less than 0.05, there is enough evidence to suggest that we reject the null hypothesis that the populations distributions are identical. There does seem evidence to support the claim that at least on of the populations produces larger values than at least on of the other distirbutione.</p>
+</div>
+</div>
+<div id="problem-b" class="section level1">
+<h1>Problem B</h1>
+<p>A blood bank kept a record of the rate of heartbeats for several blood donors.</p>
+<ol style="list-style-type: decimal">
+<li>Is the average of the rate of heartbeats the same for men and women?</li>
+</ol>
+<pre class="r"><code>men &lt;- c(58, 65, 74, 74, 76, 79, 82, 86)
+women &lt;- c(66, 68, 67, 69, 72, 73, 74, 75, 76)
+
+gender_test &lt;- wilcox.test(men, women, alternative = 'two.sided') %&gt;%
+  tidy()</code></pre>
+<div id="hypotheses-1" class="section level2">
+<h2>Hypotheses:</h2>
+<p><span class="math inline">\(H_{0}\)</span>: <span class="math inline">\(F(x) = G(x)\)</span> <span class="math inline">\(H_{1}\)</span>: <span class="math inline">\(F(X) \neq G(x)\)</span></p>
+</div>
+<div id="test-statistic-1" class="section level2">
+<h2>Test Statistic:</h2>
+<p>The test statistic is 48.5.</p>
+</div>
+<div id="p-value-1" class="section level2">
+<h2>P-Value:</h2>
+<p>The p-value is 0.2468.</p>
+</div>
+<div id="conclusion-1" class="section level2">
+<h2>Conclusion:</h2>
+<p>With a p-value greater than 0.05, there is not enough evidence to suggest that we reject the null hypothesis that <span class="math inline">\(F(x) = G(x)\)</span>. There doesn’t seem evidence to support the claim that <span class="math inline">\(F(X) \neq G(x)\)</span>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Is the variation among the men significantly greater than the variation among the women?</li>
+</ol>
+<pre class="r"><code>gender_frame &lt;- data.frame(label = c(rep('m', length(men)), rep('w', length(women))),
+            values= c(men, women))
+gender_var_test &lt;- conover_test(formula = values ~ label, 
+                                data = gender_frame,
+                                alternative = 'greater')
+gender_var_test</code></pre>
+<pre><code>## 
+##  Asymptotic Two-Sample Conover-Iman Test
+## 
+## data:  values by label (m, w)
+## Z = 1.3906, p-value = 0.08218
+## alternative hypothesis: true ratio of scales is greater than 1</code></pre>
+</div>
+<div id="hypotheses-2" class="section level2">
+<h2>Hypotheses:</h2>
+<p><span class="math inline">\(H_{0}\)</span>: <span class="math inline">\(V(m) \leq V(w)\)</span><br />
+<span class="math inline">\(H_{1}\)</span>: <span class="math inline">\(V(m) &gt; V(w)\)</span></p>
+</div>
+<div id="test-statistic-2" class="section level2">
+<h2>Test Statistic:</h2>
+<p>The test statistics is a z-value of 1.3906.</p>
+</div>
+<div id="p-value-2" class="section level2">
+<h2>P-value:</h2>
+<p>The p-value of the test is 0.08218.</p>
+</div>
+<div id="conclusion-2" class="section level2">
+<h2>Conclusion:</h2>
+<p>With a p-value greater than 0.05, there is not enough evidence to reject the null hypothesis that the Variances of men are less than or equal to the Variances of women. There does not appear to be evidence to suggest that the Variances of men are greater than the Variances of women.</p>
+</div>
+</div>
+<div id="problem-c" class="section level1">
+<h1>Problem C</h1>
+<p>7 married couples were selected at random, and each husband and each wife was asked how much money they spent on their spouses Christmas present year. The responses were as follows:</p>
+<p>Does the husband tend to spend more than the wife?</p>
+<pre class="r"><code>husband &lt;- c(25, 21, 38, 64, 52, 16, 26)
+wife &lt;- c(16, 42, 56, 41, 19, 26, 24)
+
+frame &lt;- data.frame(husband, wife) %&gt;%
+  as.tibble() %&gt;%
+  mutate(differences = husband - wife)
+
+spouse_test &lt;- wilcox.test(x = frame$husband, 
+                           y = frame$wife, 
+                           paired = TRUE,
+                           alternative = 'greater') %&gt;%
+  tidy()</code></pre>
+<div id="hypotheses-3" class="section level2">
+<h2>Hypotheses:</h2>
+<p><span class="math inline">\(H_{0}\)</span>: <span class="math inline">\(Med_{Men} \leq Med_{Women}\)</span><br />
+<span class="math inline">\(H_{1}\)</span>: <span class="math inline">\(Med_{Men} &gt; Med_{Women}\)</span></p>
+</div>
+<div id="test-statistic-3" class="section level2">
+<h2>Test Statistic:</h2>
+<p>The test statistics is a T = 16.</p>
+</div>
+<div id="p-value-3" class="section level2">
+<h2>P-value:</h2>
+<p>The p-value of the test is 0.406.</p>
+</div>
+<div id="conclusion-3" class="section level2">
+<h2>Conclusion:</h2>
+<p>With a p-value greater than 0.05, there is not enough evidence to reject the null hypothesis that the Median values of men are less than or greater than the Medain values of women. There does not appear to be evidence to suggest that the Median of the male distribution is larger than the Median of the women’s distribution.</p>
 </div>
 </div>
 
